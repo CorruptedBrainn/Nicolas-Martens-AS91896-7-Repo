@@ -1,28 +1,46 @@
 from tkinter import *
 from tkinter.ttk import *
 from tkinter import ttk
+import os
 
-def create():
-    print("Create")
+def fileAccess(mode, row):
+    
+
+def createItem(firstRow):
+    print("You've chosen to log a rented item. Please enter the below details.")
+    firstName = str(input("First Name of customer: "))
+    lastName = str(input("Customer's Surname: "))
+    rentedItem = str(input("Item that has been rented: "))
+    numberItems = int(input("How many items have been rented: "))
+    firstName = firstName.title().replace(" ","")
+    lastName = lastName.title().replace(" ","")
+    rentedItem = rentedItem.title()
+    fileAccess("a",firstRow[-1])
     return
 
-def list():
+def listItems(firstRow):
     print("List")
     return
 
-def delete():
+def deleteItem(firstRow):
     print("Delete")
     return
 
-def edit():
+def editItem(firstRow):
     print("Edit")
     return
 
-def quit():
+def quitProgram():
     print("Quit")
     return
 
 def main():
+    dataFile = open("AS91897DATA.txt","a")
+    dataFile.close()
+    if os.path.exists("AS91897ROW.txt") == False:
+        rowFile = open("AS91897ROW.txt","a")
+        rowFile.write("0")
+        rowFile.close()
     commands = ["CreateItem", "C", "ListItems", "L", "DeleteItem", "D", "EditItem", "E", "QuitProgram", "Q"]
     print("Runnable Commands: (Not case or whitespace sensitive)")
     print(f"{commands[0]}\t({commands[1]})\t|\tAllows you to log a new item that has been rented.")
@@ -33,19 +51,23 @@ def main():
     for i in range(10):
         commands[i] = commands[i].lower()
     while 1:
+        rowFile = open("AS91897ROW.txt","r")
+        firstRow = rowFile.readline().split()
+        rowFile.close()
         action = input("\nEnter Command: ")
         action = action.lower().replace(" ","")
         match action:
             case action if action in [commands[0], commands[1]]:
-                create()
+                createItem(firstRow)
             case action if action in [commands[2], commands[3]]:
-                list()
+                listItems(firstRow)
             case action if action in [commands[4], commands[5]]:
-                delete()
+                deleteItem(firstRow)
             case action if action in [commands[6], commands[7]]:
-                edit()
+                editItem(firstRow)
             case action if action in [commands[8], commands[9]]:
-                quit()
+                quitProgram()
+                break
             case _:
                 print("\nError, Command Entered is Invalid")
                 continue
