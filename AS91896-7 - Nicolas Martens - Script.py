@@ -4,14 +4,14 @@ from tkinter import ttk
 import os
 
 def fileAccess(mode, row):
-    
+    dataFile = open("AS91897DATA.txt",mode)
 
 def createItem(firstRow):
     print("You've chosen to log a rented item. Please enter the below details.")
-    firstName = str(input("First Name of customer: "))
-    lastName = str(input("Customer's Surname: "))
-    rentedItem = str(input("Item that has been rented: "))
-    numberItems = int(input("How many items have been rented: "))
+    global firstName = str(input("First Name of customer: "))
+    global lastName = str(input("Customer's Surname: "))
+    global rentedItem = str(input("Item that has been rented: "))
+    global numberItems = int(input("How many items have been rented: "))
     firstName = firstName.title().replace(" ","")
     lastName = lastName.title().replace(" ","")
     rentedItem = rentedItem.title()
