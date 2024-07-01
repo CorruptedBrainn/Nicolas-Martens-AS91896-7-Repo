@@ -5,21 +5,34 @@ import os
 
 def fileAccess(mode, row):
     dataFile = open("AS91897DATA.txt",mode)
+    match mode:
+        case "a":
+            localVar = firstName + "," + lastName + "," + rentedItem + "," + str(numberItems) + "\n"
+            dataFile.write(localVar)
+            dataFile.close()
+            rowFile = open("AS91897ROW.txt","a")
+            row = " "+str(int(int(row) + 1))
+            rowFile.write(str(row))
+            rowFile.close()
+        case "r":
+            
+            
 
 def createItem(firstRow):
+    global firstName, lastName, rentedItem, numberItems
     print("You've chosen to log a rented item. Please enter the below details.")
-    global firstName = str(input("First Name of customer: "))
-    global lastName = str(input("Customer's Surname: "))
-    global rentedItem = str(input("Item that has been rented: "))
-    global numberItems = int(input("How many items have been rented: "))
-    firstName = firstName.title().replace(" ","")
-    lastName = lastName.title().replace(" ","")
-    rentedItem = rentedItem.title()
+    firstName = str(input("First Name of customer: "))
+    lastName = str(input("Customer's Surname: "))
+    rentedItem = str(input("Item that has been rented: "))
+    numberItems = int(input("How many items have been rented: "))
+    firstName = firstName.title().replace(" ","").replace(",","")
+    lastName = lastName.title().replace(" ","").replace(",","")
+    rentedItem = rentedItem.title().replace(",","")
     fileAccess("a",firstRow[-1])
     return
 
 def listItems(firstRow):
-    print("List")
+    fileAccess("r",firstRow)
     return
 
 def deleteItem(firstRow):
@@ -31,10 +44,10 @@ def editItem(firstRow):
     return
 
 def quitProgram():
-    print("Quit")
     return
 
 def main():
+    global firstName, lastName, rentedItem, numberItems
     dataFile = open("AS91897DATA.txt","a")
     dataFile.close()
     if os.path.exists("AS91897ROW.txt") == False:
