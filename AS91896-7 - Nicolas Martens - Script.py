@@ -7,36 +7,63 @@ def fileAccess(mode, row):
     dataFile = open("AS91897DATA.txt",mode)
     match mode:
         case "a":
-            localVar = firstName + "," + lastName + "," + rentedItem + "," + str(numberItems) + "\n"
+            localVar = firstName + "," + lastName + "," + rentedItem + "," + str(numberItems) + "," + str(receiptNumber) + "\n"
             dataFile.write(localVar)
             dataFile.close()
             rowFile = open("AS91897ROW.txt","a")
-            row = " "+str(int(int(row) + 1))
+            row = " "+str(int(row) + 1)
             rowFile.write(str(row))
             rowFile.close()
         case "r":
-            
-            
+            i = 0
+            for x in range(int(row[-1])):
+                dataPrint = dataFile.readline().split(",")
+                if str(x) not in row:
+                    continue
+                i += 1
+                print(f"Hire {i}\t|\tFull Name: {dataPrint[0]} {dataPrint[1]}")
+                print(f"\t|\tItems Rented: {dataPrint[3]} {dataPrint[2]}")
+                print(f"\t|\tReceipt: {dataPrint[4]}")
+            dataFile.close()
+        case "w":
+            dataFile.close()
 
 def createItem(firstRow):
-    global firstName, lastName, rentedItem, numberItems
+    global firstName, lastName, rentedItem, numberItems, receiptNumber
     print("You've chosen to log a rented item. Please enter the below details.")
     firstName = str(input("First Name of customer: "))
-    lastName = str(input("Customer's Surname: "))
+    lastName = str(input("Last Name of customer: "))
     rentedItem = str(input("Item that has been rented: "))
     numberItems = int(input("How many items have been rented: "))
     firstName = firstName.title().replace(" ","").replace(",","")
     lastName = lastName.title().replace(" ","").replace(",","")
     rentedItem = rentedItem.title().replace(",","")
+    receiptNumber = int(firstRow[-1]) * len(firstName) * len(lastName) * len(rentedItem) * numberItems * ord(firstName[0]) * ord(lastName[0])
+    print(f"Receipt Number: {receiptNumber}")
     fileAccess("a",firstRow[-1])
     return
 
 def listItems(firstRow):
+    print("You've chosen to print all currently rented items. Below are all the hires.")
     fileAccess("r",firstRow)
     return
 
 def deleteItem(firstRow):
-    print("Delete")
+    global firstName, lastName, rentedItem, numberItems, receiptNumber
+    print("You've chosen to log a returned item. Please confirm the details below.")
+    firstName = str(input("Customer's First Name: "))
+    lastName = str(input("Customer's Surname: "))
+    rentedItem = str(input("Item that has been returned: "))
+    numberItems = int(input("The amount of items that were hired: "))
+    receiptNumber = int(input("The receipt number of the interaction: "))
+    firstName = firstName.title().replace(" ","").replace(",","")
+    lastName = lastName.title().replace(" ","").replace(",","")
+    rentedItem = rentedItem.title().replace(",","")
+    rowNum = receiptNumber / len(firstName) / len(lastName) / len(rentedItem) / numberItems / ord(firstName[0]) / ord(lastName[0])
+    if rowNum in firstRow:
+        fileAccess("w", rowNum)
+    else:
+        print("There was an incorrect detail. The data you entered does not exist.")
     return
 
 def editItem(firstRow):
@@ -47,7 +74,6 @@ def quitProgram():
     return
 
 def main():
-    global firstName, lastName, rentedItem, numberItems
     dataFile = open("AS91897DATA.txt","a")
     dataFile.close()
     if os.path.exists("AS91897ROW.txt") == False:
