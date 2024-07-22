@@ -26,7 +26,7 @@ def fileAccess(mode, row):
                 print(f"\t|\tReceipt: {dataPrint[4]}")
             dataFile.close()
         case "w":
-            dataFile.close()
+            
 
 def createItem(firstRow):
     global firstName, lastName, rentedItem, numberItems, receiptNumber
@@ -60,14 +60,36 @@ def deleteItem(firstRow):
     lastName = lastName.title().replace(" ","").replace(",","")
     rentedItem = rentedItem.title().replace(",","")
     rowNum = receiptNumber / len(firstName) / len(lastName) / len(rentedItem) / numberItems / ord(firstName[0]) / ord(lastName[0])
+    rowNum = str(int(rowNum))
     if rowNum in firstRow:
-        fileAccess("w", rowNum)
+        rowFile = open("AS91897ROW.txt","w")
+        firstRow.remove(rowNum)
+        rowNum = ""
+        for i in firstRow:
+            rowNum = rowNum + " " + str(i)
+        rowFile.write(rowNum.strip())
+        rowFile.close()
     else:
         print("There was an incorrect detail. The data you entered does not exist.")
     return
 
 def editItem(firstRow):
-    print("Edit")
+    global firstName, lastName, rentedItem, numberItems, receiptNumber
+    print("You've chosen to log a returned item. Please confirm the details below.")
+    firstName = str(input("Customer's First Name: "))
+    lastName = str(input("Customer's Surname: "))
+    rentedItem = str(input("Item that has been returned: "))
+    numberItems = int(input("The amount of items that were hired: "))
+    receiptNumber = int(input("The receipt number of the interaction: "))
+    firstName = firstName.title().replace(" ","").replace(",","")
+    lastName = lastName.title().replace(" ","").replace(",","")
+    rentedItem = rentedItem.title().replace(",","")
+    rowNum = receiptNumber / len(firstName) / len(lastName) / len(rentedItem) / numberItems / ord(firstName[0]) / ord(lastName[0])
+    rowNum = str(int(rowNum))
+    if rowNum in firstRow:
+        fileAccess("w",rowNum)
+    else:
+        print("There was an incorrect detail. The data you entered does not exist.")
     return
 
 def quitProgram():
