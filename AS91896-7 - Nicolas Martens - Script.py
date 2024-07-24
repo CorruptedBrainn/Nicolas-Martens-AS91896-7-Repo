@@ -101,6 +101,9 @@ def editItem(firstRow):
         lastName = str(input("Customer's Surname: "))
         rentedItem = str(input("Item that was hired: "))
         numberItems = int(input("The amount of items that were hired: "))
+        firstName = firstName.title().replace(" ","").replace(",","")
+        lastName = lastName.title().replace(" ","").replace(",","")
+        rentedItem = rentedItem.title().replace(",","")
         receiptNumber = int(rowNum) * len(firstName) * len(lastName) * len(rentedItem) * numberItems * ord(firstName[0]) * ord(lastName[0])
         print(f"New Receipt Number: {receiptNumber}")
         fileAccess("w",rowNum)
@@ -112,12 +115,14 @@ def quitProgram():
     return
 
 def main():
-    dataFile = open("AS91897DATA.txt","a")
-    dataFile.close()
     if os.path.exists("AS91897ROW.txt") == False:
         rowFile = open("AS91897ROW.txt","a")
-        rowFile.write("0")
+        rowFile.write("1")
         rowFile.close()
+    if os.path.exists("AS91897DATA.txt") == False:
+        dataFile = open("AS91897DATA.txt","a")
+        dataFile.write("FIRST NAME,LAST NAME,HIRED ITEM,NUM HIRES,RECEIPT\n")
+        dataFile.close()
     commands = ["CreateItem", "C", "ListItems", "L", "DeleteItem", "D", "EditItem", "E", "QuitProgram", "Q"]
     print("Runnable Commands: (Not case or whitespace sensitive)")
     print(f"{commands[0]}\t({commands[1]})\t|\tAllows you to log a new item that has been rented.")
