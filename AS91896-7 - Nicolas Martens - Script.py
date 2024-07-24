@@ -1,6 +1,3 @@
-from tkinter import *
-from tkinter.ttk import *
-from tkinter import ttk
 import os
 import re
 
