@@ -2,19 +2,21 @@ from tkinter import *
 from tkinter.ttk import *
 from tkinter import ttk
 import os
+import re
 
 def fileAccess(mode, row):
-    dataFile = open("AS91897DATA.txt",mode)
     match mode:
         case "a":
+            dataFile = open("AS91897DATA.txt",mode)
             localVar = firstName + "," + lastName + "," + rentedItem + "," + str(numberItems) + "," + str(receiptNumber) + "\n"
             dataFile.write(localVar)
             dataFile.close()
-            rowFile = open("AS91897ROW.txt","a")
+            rowFile = open("AS91897ROW.txt",mode)
             row = " "+str(int(row) + 1)
             rowFile.write(str(row))
             rowFile.close()
         case "r":
+            dataFile = open("AS91897DATA.txt",mode)
             i = 0
             for x in range(int(row[-1])):
                 dataPrint = dataFile.readline().split(",")
@@ -26,15 +28,25 @@ def fileAccess(mode, row):
                 print(f"\t|\tReceipt: {dataPrint[4]}")
             dataFile.close()
         case "w":
+            dataString = ""
+            dataFile = open("AS91897DATA.txt","r")
+            dataArray = dataFile.read()
+            dataArray = re.split(', |\n', dataArray)
+            dataArray[int(row)] = firstName + "," + lastName + "," + rentedItem + "," + str(numberItems) + "," + str(receiptNumber)
+            dataFile.close()
+            for x in dataArray:
+                dataString = dataString + x + "\n"
+            dataFile = open("AS91897DATA.txt",mode)
+            dataFile.write(dataString)
+            dataFile.close()
             
-
 def createItem(firstRow):
     global firstName, lastName, rentedItem, numberItems, receiptNumber
     print("You've chosen to log a rented item. Please enter the below details.")
-    firstName = str(input("First Name of customer: "))
-    lastName = str(input("Last Name of customer: "))
+    firstName = str(input("Customer's First Name: "))
+    lastName = str(input("Customer's Surname: "))
     rentedItem = str(input("Item that has been rented: "))
-    numberItems = int(input("How many items have been rented: "))
+    numberItems = int(input("How many items have been hired: "))
     firstName = firstName.title().replace(" ","").replace(",","")
     lastName = lastName.title().replace(" ","").replace(",","")
     rentedItem = rentedItem.title().replace(",","")
@@ -75,10 +87,10 @@ def deleteItem(firstRow):
 
 def editItem(firstRow):
     global firstName, lastName, rentedItem, numberItems, receiptNumber
-    print("You've chosen to log a returned item. Please confirm the details below.")
+    print("You've chosen to edit a rented item. Please confirm the details below.")
     firstName = str(input("Customer's First Name: "))
     lastName = str(input("Customer's Surname: "))
-    rentedItem = str(input("Item that has been returned: "))
+    rentedItem = str(input("Item that was hired: "))
     numberItems = int(input("The amount of items that were hired: "))
     receiptNumber = int(input("The receipt number of the interaction: "))
     firstName = firstName.title().replace(" ","").replace(",","")
@@ -87,6 +99,13 @@ def editItem(firstRow):
     rowNum = receiptNumber / len(firstName) / len(lastName) / len(rentedItem) / numberItems / ord(firstName[0]) / ord(lastName[0])
     rowNum = str(int(rowNum))
     if rowNum in firstRow:
+        print("Now enter the new details of the hire.")
+        firstName = str(input("Customer's First Name: "))
+        lastName = str(input("Customer's Surname: "))
+        rentedItem = str(input("Item that was hired: "))
+        numberItems = int(input("The amount of items that were hired: "))
+        receiptNumber = int(rowNum) * len(firstName) * len(lastName) * len(rentedItem) * numberItems * ord(firstName[0]) * ord(lastName[0])
+        print(f"New Receipt Number: {receiptNumber}")
         fileAccess("w",rowNum)
     else:
         print("There was an incorrect detail. The data you entered does not exist.")
