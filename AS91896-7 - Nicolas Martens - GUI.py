@@ -91,7 +91,7 @@ def fileAccess(mode, row):
                 lastName = str(lastName.get()).title().replace(" ","").replace(",","")
                 rentedItem = str(rentedItem.get()).title().replace(",","")
                 numberItems = int(numberItems.get())
-                receiptNumber = int(firstRow[-1]) * len(firstName) * len(lastName) * len(rentedItem) * numberItems * ord(firstName[0]) * ord(lastName[0])
+                receiptNumber = int(row) * len(firstName) * len(lastName) * len(rentedItem) * numberItems * ord(firstName[0]) * ord(lastName[0])
                 print(f"Receipt: {receiptNumber}")
                 mb.showinfo(title = "Julie's Party Hire Store", message = str("Your entry has been recorded. Receipt: " + str(receiptNumber)))
             
@@ -140,17 +140,33 @@ def fileAccess(mode, row):
             dataFile.close()
             return
         case "w":
-            dataString = ""
-            dataFile = open("AS91897DATA.txt","r")
-            dataArray = dataFile.read()
-            dataArray = re.split(', |\n', dataArray)
-            dataArray[int(rowNum)] = firstName + "," + lastName + "," + rentedItem + "," + str(numberItems) + "," + str(receiptNumber)
-            dataFile.close()
-            for x in dataArray:
-                dataString = dataString + x + "\n"
-            dataFile = open("AS91897DATA.txt",mode)
-            dataFile.write(dataString)
-            dataFile.close()
+            confirm = mb.askyesnocancel(title = "Julie's Party Hire Store", message = "Are you sure you want to continue?", detail = "Press No to go back, and Cancel to return to main menu.")
+            if confirm == False:
+                return
+            elif confirm == True:
+                firstName = str(firstName.get()).title().replace(" ","").replace(",","")
+                lastName = str(lastName.get()).title().replace(" ","").replace(",","")
+                rentedItem = str(rentedItem.get()).title().replace(",","")
+                numberItems = int(numberItems.get())
+                print(firstName)
+                print(lastName)
+                print(firstName[0])
+                print(lastName[0])
+                receiptNumber = int(row) * len(firstName) * len(lastName) * len(rentedItem) * numberItems * ord(firstName[0]) * ord(lastName[0])
+                print(f"New Receipt: {receiptNumber}")
+                mb.showinfo(title = "Julie's Party Hire Store", message = str("Your edit has been recorded. Receipt: " + str(receiptNumber)))
+            
+                dataString = ""
+                dataFile = open("AS91897DATA.txt","r")
+                dataArray = dataFile.read()
+                dataArray = re.split(', |\n', dataArray)
+                dataArray[int(row)] = firstName + "," + lastName + "," + rentedItem + "," + str(numberItems) + "," + str(receiptNumber)
+                dataFile.close()
+                for x in dataArray:
+                    dataString = dataString + x + "\n"
+                dataFile = open("AS91897DATA.txt",mode)
+                dataFile.write(dataString)
+                dataFile.close()
             
             firstNameLabel.grid_remove()
             firstNameEntry.grid_remove()
@@ -160,8 +176,6 @@ def fileAccess(mode, row):
             rentedItemEntry.grid_remove()
             numberItemsLabel.grid_remove()
             numberItemsEntry.grid_remove()
-            receiptLabel.grid_remove()
-            receiptEntry.grid_remove()
             actionButton.grid_remove()
             secondaryLabel.configure(text = "Commands to run")
             createButton.grid()
@@ -169,6 +183,14 @@ def fileAccess(mode, row):
             deleteButton.grid()
             editButton.grid()
             return
+
+def checkNum(val):
+    return re.match(r"^[0-9]*$", val) is not None
+checkNumWrapper = (root.register(checkNum), "%P")
+
+def checkStr(val):
+    return re.match(r"^([A-z]|\s)*$", val) is not None
+checkStrWrapper = (root.register(checkStr), "%P")
 
 def createItem():
     global firstRow, firstName, lastName, rentedItem, numberItems, receiptNumber, itemsList
@@ -184,10 +206,10 @@ def createItem():
     listButton.grid_remove()
     deleteButton.grid_remove()
     editButton.grid_remove()
-    firstNameEntry.configure(textvariable = firstName)
-    lastNameEntry.configure(textvariable = lastName)
-    rentedItemEntry.configure(values = itemsList, textvariable = rentedItem)
-    numberItemsEntry.configure(textvariable = numberItems)
+    firstNameEntry.configure(textvariable = firstName, validate = "key", validatecommand = checkStrWrapper)
+    lastNameEntry.configure(textvariable = lastName, validate = "key", validatecommand = checkStrWrapper)
+    rentedItemEntry.configure(values = itemsList, validate = "key", textvariable = rentedItem, validatecommand = checkStrWrapper)
+    numberItemsEntry.configure(textvariable = numberItems, validate = "key", validatecommand = checkNumWrapper)
     firstNameLabel.configure(text = "Customer's First name:")
     lastNameLabel.configure(text = "Customer's Last name:")
     rentedItemLabel.configure(text = "Item that has been hired:")
@@ -225,11 +247,11 @@ def deleteItem():
     listButton.grid_remove()
     deleteButton.grid_remove()
     editButton.grid_remove()
-    firstNameEntry.configure(textvariable = firstName)
-    lastNameEntry.configure(textvariable = lastName)
-    rentedItemEntry.configure(values = itemsList, textvariable = rentedItem)
-    numberItemsEntry.configure(textvariable = numberItems)
-    receiptEntry.configure(textvariable = receiptNumber)
+    firstNameEntry.configure(textvariable = firstName, validate = "key", validatecommand = checkStrWrapper)
+    lastNameEntry.configure(textvariable = lastName, validate = "key", validatecommand = checkStrWrapper)
+    rentedItemEntry.configure(values = itemsList, textvariable = rentedItem, validate = "key", validatecommand = checkStrWrapper)
+    numberItemsEntry.configure(textvariable = numberItems, validate = "key", validatecommand = checkNumWrapper)
+    receiptEntry.configure(textvariable = receiptNumber, validate = "key", validatecommand = checkNumWrapper)
     firstNameLabel.configure(text = "Customer's First name:")
     lastNameLabel.configure(text = "Customer's Last name:")
     rentedItemLabel.configure(text = "Item that has been returned:")
@@ -251,7 +273,56 @@ def deleteItem():
     return
 
 def editItemCont():
+    global firstRow, firstName, lastName, rentedItem, numberItems, receiptNumber
+
+    firstName = str(firstName.get()).title().replace(" ","").replace(",","")
+    lastName = str(lastName.get()).title().replace(" ","").replace(",","")
+    rentedItem = str(rentedItem.get()).title().replace(",","")
+    numberItems = int(numberItems.get())
+    receiptNumber = int(receiptNumber.get())
+    if len(firstName) != 0 and len(lastName) != 0 and len(rentedItem) != 0 and numberItems != 0:
+        rowNum = float(receiptNumber / len(firstName) / len(lastName) / len(rentedItem) / numberItems / ord(firstName[0]) / ord(lastName[0]))
+    else:
+        rowNum = 0.5
     
+    if str(int(rowNum)) in firstRow and rowNum.is_integer():
+        editFunc = partial(fileAccess, "w", rowNum)
+        
+        firstName = StringVar()
+        lastName = StringVar()
+        rentedItem = StringVar()
+        numberItems = IntVar()
+
+        firstNameEntry.configure(textvariable = firstName, validate = "key", validatecommand = checkStrWrapper)
+        lastNameEntry.configure(textvariable = lastName, validate = "key", validatecommand = checkStrWrapper)
+        rentedItemEntry.configure(values = itemsList, textvariable = rentedItem, validate = "key", validatecommand = checkStrWrapper)
+        numberItemsEntry.configure(textvariable = numberItems, validate = "key", validatecommand = checkNumWrapper)
+        firstNameLabel.configure(text = "Customer's new First name:")
+        lastNameLabel.configure(text = "Customer's new Last name:")
+        rentedItemLabel.configure(text = "The new item that was hired:")
+        numberItemsLabel.configure(text = "The new amount of items hired:")
+        actionButton.configure(text = "Confrm Changes", command = editFunc)
+        receiptLabel.grid_remove()
+        receiptEntry.grid_remove()
+    else:
+        mb.showerror(title = "Julie's Party Hire Store", message = "The data you entered is incorrect. Please double check all your information is accurate.")
+        firstNameLabel.grid_remove()
+        firstNameEntry.grid_remove()
+        lastNameLabel.grid_remove()
+        lastNameEntry.grid_remove()
+        rentedItemLabel.grid_remove()
+        rentedItemEntry.grid_remove()
+        numberItemsLabel.grid_remove()
+        numberItemsEntry.grid_remove()
+        receiptLabel.grid_remove()
+        receiptEntry.grid_remove()
+        actionButton.grid_remove()
+        secondaryLabel.configure(text = "Commands to run")
+        createButton.grid()
+        listButton.grid()
+        deleteButton.grid()
+        editButton.grid()
+    return
 
 def editItem():
     global firstRow, firstName, lastName, rentedItem, numberItems, receiptNumber
@@ -260,23 +331,21 @@ def editItem():
     rentedItem = StringVar()
     numberItems = IntVar()
     receiptNumber = IntVar()
-
-    editFunc = partial(fileAccess, "w", "0")
     
-    secondaryLabel.configure(text = "Item Rental | Logging a Returned Item")
+    secondaryLabel.configure(text = "Item Rental | Editing a hired Item")
     createButton.grid_remove()
     listButton.grid_remove()
     deleteButton.grid_remove()
     editButton.grid_remove()
-    firstNameEntry.configure(textvariable = firstName)
-    lastNameEntry.configure(textvariable = lastName)
-    rentedItemEntry.configure(values = itemsList, textvariable = rentedItem)
-    numberItemsEntry.configure(textvariable = numberItems)
-    receiptEntry.configure(textvariable = receiptNumber)
+    firstNameEntry.configure(textvariable = firstName, validate = "key", validatecommand = checkStrWrapper)
+    lastNameEntry.configure(textvariable = lastName, validate = "key", validatecommand = checkStrWrapper)
+    rentedItemEntry.configure(values = itemsList, textvariable = rentedItem, validate = "key", validatecommand = checkStrWrapper)
+    numberItemsEntry.configure(textvariable = numberItems, validate = "key", validatecommand = checkNumWrapper)
+    receiptEntry.configure(textvariable = receiptNumber, validate = "key", validatecommand = checkNumWrapper)
     firstNameLabel.configure(text = "Customer's First name:")
     lastNameLabel.configure(text = "Customer's Last name:")
     rentedItemLabel.configure(text = "Item that was hired:")
-    numberItemsLabel.configure(text = "The amountof items hired:")
+    numberItemsLabel.configure(text = "The amount of items hired:")
     receiptLabel.configure(text = "The receipt number of the transaction:")
     actionButton.configure(text = "Continue", command = editItemCont)
 
@@ -296,6 +365,7 @@ def editItem():
 def quitProgram():
     if mb.askyesno(title = "Julie's Party Hire Store", message = "Are you sure you want to quit?") == True:
         root.destroy()
+        os._exit(os.EX_OK)
     return
 
 def main():
@@ -332,6 +402,8 @@ def main():
         for i in range(len(tempArray)):
             if i % 5 == 2 and i > 5:
                 itemsList.append(tempArray[i])
+        itemsList = list(dict.fromkeys(itemsList))
+        
         dataFile.close()
         
         root.update_idletasks()
