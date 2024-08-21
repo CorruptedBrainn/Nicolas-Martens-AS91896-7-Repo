@@ -19,6 +19,8 @@ headerFont = font.Font(family = fontFamily, name = "headerFont", size = 15, weig
 mainFont = font.Font(family = fontFamily, name = "mainFont", size = 10)
 italFont = font.Font(family = fontFamily, name = "italFont", size = 9, slant = "italic")
 
+print(font.font_families())
+
 style.configure("Title.TLabel", font = titleFont, padding = 5)
 style.configure("Header.TLabel", font = headerFont, padding = 2.5)
 style.configure("Main.TLabel", font = mainFont, padding = 2.5)
