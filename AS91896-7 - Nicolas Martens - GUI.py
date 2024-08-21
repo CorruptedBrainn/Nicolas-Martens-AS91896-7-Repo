@@ -12,10 +12,12 @@ style = ttk.Style()
 
 # HELVETICA - MICROSOFT SANS SERIF - SEGOE UI
 
-titleFont = font.Font(family = "Helvetica", name = "titleFont", size = 20, weight = "bold")
-headerFont = font.Font(family = "Helvetica", name = "headerFont", size = 15, weight = "bold")
-mainFont = font.Font(family = "Helvetica", name = "mainFont", size = 10)
-italFont = font.Font(family = "Helvetica", name = "italFont", size = 9, slant = "italic")
+fontFamily = "Helvetica"
+
+titleFont = font.Font(family = fontFamily, name = "titleFont", size = 20, weight = "bold")
+headerFont = font.Font(family = fontFamily, name = "headerFont", size = 15, weight = "bold")
+mainFont = font.Font(family = fontFamily, name = "mainFont", size = 10)
+italFont = font.Font(family = fontFamily, name = "italFont", size = 9, slant = "italic")
 
 style.configure("Title.TLabel", font = titleFont, padding = 5)
 style.configure("Header.TLabel", font = headerFont, padding = 2.5)
@@ -63,11 +65,11 @@ mainFrame.columnconfigure(1, weight = 1)
 mainFrame.rowconfigure(0, weight = 1)
 mainFrame.rowconfigure(1, weight = 1)
 mainFrame.rowconfigure(2, weight = 1)
-secondaryFrame.columnconfigure(0, weight = 1, pad = 5)
-secondaryFrame.columnconfigure(1, weight = 1, pad = 5)
-secondaryFrame.rowconfigure(0, weight = 1, pad = 2)
-secondaryFrame.rowconfigure(1, weight = 1, pad = 2)
-secondaryFrame.rowconfigure(2, weight = 1, pad = 2)
+secondaryFrame.columnconfigure(0, weight = 1, pad = 10)
+secondaryFrame.columnconfigure(1, weight = 1, pad = 10)
+secondaryFrame.rowconfigure(0, weight = 1, pad = 5)
+secondaryFrame.rowconfigure(1, weight = 1, pad = 5)
+secondaryFrame.rowconfigure(2, weight = 1, pad = 5)
 
 def fileAccess(mode, row):
     global firstName, lastName, rentedItem, numberItems, receiptNumber
