@@ -2,40 +2,72 @@ from tkinter import *
 from tkinter import Tk as tk
 from tkinter import ttk
 from tkinter import messagebox as mb
+from tkinter import font
 from functools import partial
 import os
 import re
 
 root = tk()
+style = ttk.Style()
+
+# HELVETICA - MICROSOFT SANS SERIF - SEGOE UI
+
+titleFont = font.Font(family = "Helvetica", name = "titleFont", size = 20, weight = "bold")
+headerFont = font.Font(family = "Helvetica", name = "headerFont", size = 15, weight = "bold")
+mainFont = font.Font(family = "Helvetica", name = "mainFont", size = 10)
+italFont = font.Font(family = "Helvetica", name = "italFont", size = 9, slant = "italic")
+
+style.configure("Title.TLabel", font = titleFont, padding = 5)
+style.configure("Header.TLabel", font = headerFont, padding = 2.5)
+style.configure("Main.TLabel", font = mainFont, padding = 2.5)
+style.configure("Main.TButton", font = mainFont, padding = 5, width = 30, height = 2.5)
+style.configure("Sub.TButton", font = italFont, padding = 0, width = 2.25, height = 0.75)
+
 root.title("Julie's Party Hire Store")
-mainFrame = ttk.Frame(root)
-titleLabel = ttk.Label(mainFrame)
-secondaryLabel = ttk.Label(mainFrame)
-quitButton = ttk.Button(mainFrame)
-createButton = ttk.Button(mainFrame)
-listButton = ttk.Button(mainFrame)
-deleteButton = ttk.Button(mainFrame)
-editButton = ttk.Button(mainFrame)
-firstNameEntry = ttk.Entry(mainFrame)
-lastNameEntry = ttk.Entry(mainFrame)
-rentedItemEntry = ttk.Combobox(mainFrame)
-numberItemsEntry = ttk.Spinbox(mainFrame, from_ = 1, to = 1000, increment = 1)
-receiptEntry = ttk.Entry(mainFrame)
-firstNameLabel = ttk.Label(mainFrame)
-lastNameLabel = ttk.Label(mainFrame)
-rentedItemLabel = ttk.Label(mainFrame)
-numberItemsLabel = ttk.Label(mainFrame)
-receiptLabel = ttk.Label(mainFrame)
+mainFrame = ttk.Frame(root, padding = 7.5, width = 150, height = 150)
+secondaryFrame = ttk.Frame(mainFrame, padding = 5)
+titleLabel = ttk.Label(mainFrame, style = "Title.TLabel")
+secondaryLabel = ttk.Label(secondaryFrame, style = "Header.TLabel")
+quitButton = ttk.Button(root, style = "Sub.TButton")
+createButton = ttk.Button(secondaryFrame, style = "Main.TButton")
+listButton = ttk.Button(secondaryFrame, style = "Main.TButton")
+deleteButton = ttk.Button(secondaryFrame, style = "Main.TButton")
+editButton = ttk.Button(secondaryFrame, style = "Main.TButton")
+firstNameEntry = ttk.Entry(secondaryFrame)
+lastNameEntry = ttk.Entry(secondaryFrame)
+rentedItemEntry = ttk.Combobox(secondaryFrame)
+numberItemsEntry = ttk.Spinbox(secondaryFrame, from_ = 1, to = 1000, increment = 1)
+receiptEntry = ttk.Entry(secondaryFrame)
+firstNameLabel = ttk.Label(secondaryFrame)
+lastNameLabel = ttk.Label(secondaryFrame)
+rentedItemLabel = ttk.Label(secondaryFrame)
+numberItemsLabel = ttk.Label(secondaryFrame)
+receiptLabel = ttk.Label(secondaryFrame)
 actionButton = ttk.Button(mainFrame)
 
-mainFrame.grid()
-titleLabel.grid()
-secondaryLabel.grid()
-quitButton.grid()
-createButton.grid()
-listButton.grid()
-deleteButton.grid()
-editButton.grid()
+mainFrame.grid(row = 0, column = 0, sticky = "news")
+secondaryFrame.grid(row = 2, columnspan = 2, sticky = "news")
+titleLabel.grid(row = 0, column = 0, columnspan = 2)
+secondaryLabel.grid(row = 0, columnspan = 2)
+quitButton.grid(row = 0, column = 0, sticky = "ne")
+createButton.grid(row = 1, column = 0)
+listButton.grid(row = 1, column = 1)
+deleteButton.grid(row = 2, column = 0)
+editButton.grid(row = 2, column = 1)
+
+
+root.columnconfigure(0, weight = 1)
+root.rowconfigure(0, weight = 1)
+mainFrame.columnconfigure(0, weight = 1)
+mainFrame.columnconfigure(1, weight = 1)
+mainFrame.rowconfigure(0, weight = 1)
+mainFrame.rowconfigure(1, weight = 1)
+mainFrame.rowconfigure(2, weight = 1)
+secondaryFrame.columnconfigure(0, weight = 1, pad = 5)
+secondaryFrame.columnconfigure(1, weight = 1, pad = 5)
+secondaryFrame.rowconfigure(0, weight = 1, pad = 2)
+secondaryFrame.rowconfigure(1, weight = 1, pad = 2)
+secondaryFrame.rowconfigure(2, weight = 1, pad = 2)
 
 def fileAccess(mode, row):
     global firstName, lastName, rentedItem, numberItems, receiptNumber
