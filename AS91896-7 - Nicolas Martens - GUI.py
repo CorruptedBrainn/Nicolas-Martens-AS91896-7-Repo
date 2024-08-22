@@ -10,22 +10,26 @@ import re
 root = tk()
 style = ttk.Style()
 
-# HELVETICA - MICROSOFT SANS SERIF - SEGOE UI
+# Cooper Black - Jokerman - Magneto
 
-fontFamily = "Helvetica"
+fontFamily = "Cooper Black"
 
-titleFont = font.Font(family = fontFamily, name = "titleFont", size = 20, weight = "bold")
-headerFont = font.Font(family = fontFamily, name = "headerFont", size = 15, weight = "bold")
-mainFont = font.Font(family = fontFamily, name = "mainFont", size = 10)
+titleFont = font.Font(family = fontFamily, name = "titleFont", size = 25, weight = "bold")
+headerFont = font.Font(family = fontFamily, name = "headerFont", size = 18, weight = "bold")
+mainFont = font.Font(family = fontFamily, name = "mainFont", size = 14)
 italFont = font.Font(family = fontFamily, name = "italFont", size = 9, slant = "italic")
-
-print(font.font_families())
+subFont = font.Font(family = fontFamily, name = "subFont", size = 11)
+entryFont = font.Font(family = fontFamily, name = "entryFont", size = 10, slant = "italic")
 
 style.configure("Title.TLabel", font = titleFont, padding = 5)
 style.configure("Header.TLabel", font = headerFont, padding = 2.5)
 style.configure("Main.TLabel", font = mainFont, padding = 2.5)
-style.configure("Main.TButton", font = mainFont, padding = 5, width = 30, height = 2.5)
+style.configure("Main.TButton", font = mainFont, padding = 5, width = 30)
 style.configure("Sub.TButton", font = italFont, padding = 0, width = 2.25, height = 0.75)
+style.configure("Input.TLabel", font = subFont, padding = 2)
+style.configure("Input.TEntry", font = entryFont, padding = 2, width = 25)
+style.configure("Input.TCombobox", font = entryFont, padding = 2, width = 25)
+style.configure("Input.TSpinbox", font = entryFont, padding = 2, width = 25)
 
 root.title("Julie's Party Hire Store")
 mainFrame = ttk.Frame(root, padding = 7.5, width = 150, height = 150)
@@ -37,17 +41,17 @@ createButton = ttk.Button(secondaryFrame, style = "Main.TButton")
 listButton = ttk.Button(secondaryFrame, style = "Main.TButton")
 deleteButton = ttk.Button(secondaryFrame, style = "Main.TButton")
 editButton = ttk.Button(secondaryFrame, style = "Main.TButton")
-firstNameEntry = ttk.Entry(secondaryFrame)
-lastNameEntry = ttk.Entry(secondaryFrame)
-rentedItemEntry = ttk.Combobox(secondaryFrame)
-numberItemsEntry = ttk.Spinbox(secondaryFrame, from_ = 1, to = 1000, increment = 1)
-receiptEntry = ttk.Entry(secondaryFrame)
-firstNameLabel = ttk.Label(secondaryFrame)
-lastNameLabel = ttk.Label(secondaryFrame)
-rentedItemLabel = ttk.Label(secondaryFrame)
-numberItemsLabel = ttk.Label(secondaryFrame)
-receiptLabel = ttk.Label(secondaryFrame)
-actionButton = ttk.Button(mainFrame)
+firstNameEntry = ttk.Entry(secondaryFrame, style = "Input.TEntry")
+lastNameEntry = ttk.Entry(secondaryFrame, style = "Input.TEntry")
+rentedItemEntry = ttk.Combobox(secondaryFrame, style = "Input.TCombobox")
+numberItemsEntry = ttk.Spinbox(secondaryFrame, from_ = 1, to = 1000, increment = 1, style = "Input.TSpinbox")
+receiptEntry = ttk.Entry(secondaryFrame, style = "Input.TEntry")
+firstNameLabel = ttk.Label(secondaryFrame, style = "Input.TLabel")
+lastNameLabel = ttk.Label(secondaryFrame, style = "Input.TLabel")
+rentedItemLabel = ttk.Label(secondaryFrame, style = "Input.TLabel")
+numberItemsLabel = ttk.Label(secondaryFrame, style = "Input.TLabel")
+receiptLabel = ttk.Label(secondaryFrame, style = "Input.TLabel")
+actionButton = ttk.Button(mainFrame, style = "Main.TButton")
 
 mainFrame.grid(row = 0, column = 0, sticky = "news")
 secondaryFrame.grid(row = 2, columnspan = 2, sticky = "news")
